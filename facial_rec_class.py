@@ -24,6 +24,8 @@ class Video():
         self.video_capture = cv2.VideoCapture(0)
 
     def load_faces(self):
+        """Load faces from "known_faces" folder
+        """
         for name in os.listdir(self.known_faces_dir):
             for filename in os.listdir(f"{self.known_faces_dir}/{name}"):
                 print(filename)
@@ -33,6 +35,10 @@ class Video():
                 self.known_names.append(name)
 
     def check_faces(self):
+        """Compare video frame to faces in known faces folder to see if matching,
+            This also frames out and labels the face with the persons name based on the folder itself
+            Will label "uknown" if face doesn't appear
+        """
             # Grab a single frame of video
         ret, frame = self.video_capture.read()
 

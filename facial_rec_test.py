@@ -24,7 +24,7 @@ known_names = []
 
 for name in os.listdir(known_faces_dir):
     for filename in os.listdir(f"{known_faces_dir}/{name}"):
-        print(filename)
+        print(name)
         image = face_recognition.load_image_file(f"{known_faces_dir}/{name}/{filename}")
         encoding = face_recognition.face_encodings(image)[0]
         known_faces.append(encoding)
