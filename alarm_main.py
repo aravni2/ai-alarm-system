@@ -132,7 +132,7 @@ if __name__ == '__main__':
             motion = max(motion, detect_motion())
             if alarm.is_armed ==1  and motion==1:
                 alarm.siren()
-                vid.check_faces()
+                matches, frame = vid.check_faces()
                 LCD1602.write(0,0,f'INTRUDER ALERT!!!')
             
             elif alarm.is_armed:

@@ -95,6 +95,8 @@ class Video():
 
         # Display the resulting image
         cv2.imshow('Video', frame)
+
+        return matches, frame
     
 
 
