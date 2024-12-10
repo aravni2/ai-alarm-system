@@ -49,6 +49,7 @@ class data_lake:
         with open(f'{self.local_file_path}/{file_name}', "rb") as data:
             file_client = self.file_system_client.get_file_client(file_name)
             file_client.upload_data(data, overwrite=True)
+            
         
         print(f"File {self.local_file_path} uploaded to {self.adl_container_name} as {file_name}")
 
