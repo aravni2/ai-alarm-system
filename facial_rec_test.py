@@ -3,7 +3,16 @@ import os
 import sys
 import cv2
 import numpy as np
+import time
+from az_key_vault import get_kv_secret   
+from az_data_lake_class import data_lake
+from datetime import datetime
 # https://www.youtube.com/watch?v=535acCxjHCI
+
+
+# TEST picture send
+adl_account = get_kv_secret('adl-alarm-name')
+data_L= data_lake(adl_account=adl_account,lcl_file_path = 'captures')
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -37,10 +46,13 @@ for name in os.listdir(known_faces_dir):
 #     encodings = face_recognition.face_encodings(image)[0]
 #     image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
 
-
-
+previous_time = time.time()
+delta = 0
 
 while True:
+    current_time = time.time()
+    delta += current_time - previous_time
+    previous_time = current_time 
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
@@ -97,6 +109,16 @@ while True:
 
     # Display the resulting image
     cv2.imshow('Video', frame)
+    
+    # save picture if delta greater than 1 second
+    print(delta)
+    if delta >=3:
+        print('taking photo')
+        im_name = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}_.png'
+        cv2.imwrite(f'captures/{im_name}',frame)
+        # time.sleep(3)
+        data_L.send_files(im_name)
+        delta = 0
 
     # Hit 'q' on the keyboard to quit!
     if cv2.waitKey(1) & 0xFF == ord('q'):
