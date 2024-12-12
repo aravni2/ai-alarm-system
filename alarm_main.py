@@ -133,15 +133,23 @@ if __name__ == '__main__':
             if alarm.is_armed ==1  and motion==1:
                 alarm.siren()
                 matches, frame = vid.check_faces()
-                LCD1602.write(0,0,f'INTRUDER ALERT!!!')
-            
+                LCD1602.write(0,0,f'INTRUDER ALERT!!')
+
+                if matches:
+                    alarm.disarm()
+                    kp.status = ''
+                    motion=0
+                    vid.video_capture.release()
+                    cv2.destroyAllWindows()
+
+            # write statuses to LCD screen, spaces in strings ensure all characters are overwritten
             elif alarm.is_armed:
 
-                LCD1602.write(0,0,f'Armed')
+                LCD1602.write(0,0,f'Armed           ')
             elif temp >110:
-                LCD1602.write(0,0,f'FIRE Detected!')
+                LCD1602.write(0,0,f'FIRE Detected!  ')
             else:
-                LCD1602.write(0,0,f'Disarmed')
+                LCD1602.write(0,0,f'Disarmed        ')
 
 
             

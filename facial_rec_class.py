@@ -20,6 +20,7 @@ class Video():
         self.face_locations = []
         self.face_encodings= []
         self.face_names = []
+        self.matches = []
 
         self.video_capture = cv2.VideoCapture(0)
 
@@ -57,12 +58,12 @@ class Video():
             self.face_names = []
             for face_encoding in self.face_encodings:
                 # See if the face is a match for the known face(s)
-                matches = face_recognition.compare_faces(self.known_faces, face_encoding)
+                self.matches = face_recognition.compare_faces(self.known_faces, face_encoding)
                 name = "Unknown"
 
                 # # If a match was found in known_face_encodings, just use the first one.
-                if True in matches:
-                    first_match_index = matches.index(True)
+                if True in self.matches:
+                    first_match_index = self.matches.index(True)
                     name = self.known_names[first_match_index]
 
                 # Or instead, use the known face with the smallest distance to the new face
@@ -96,7 +97,7 @@ class Video():
         # Display the resulting image
         cv2.imshow('Video', frame)
 
-        return matches, frame
+        return self.matches, frame
     
 
 
