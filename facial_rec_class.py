@@ -3,6 +3,8 @@ import os
 import sys
 import cv2
 import numpy as np
+import time
+from datetime import datetime
 # https://www.youtube.com/watch?v=535acCxjHCI
 
 
@@ -21,6 +23,7 @@ class Video():
         self.face_encodings= []
         self.face_names = []
         self.matches = []
+        self.frame = None
 
         self.video_capture = cv2.VideoCapture(0)
 
@@ -41,12 +44,12 @@ class Video():
             Will label "uknown" if face doesn't appear
         """
             # Grab a single frame of video
-        ret, frame = self.video_capture.read()
+        ret, self.frame = self.video_capture.read()
 
         # Only process every other frame of video to save time
         if self.process_this_frame:
             # Resize frame of video to 1/4 size for faster face recognition processing
-            small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+            small_frame = cv2.resize(self.frame, (0, 0), fx=0.25, fy=0.25)
 
             # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
             rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
@@ -86,18 +89,21 @@ class Video():
             left *= 4
 
             # Draw a box around the face
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            cv2.rectangle(self.frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
             # Draw a label with a name below the face
-            cv2.rectangle(frame, (left, bottom), (right, bottom+35), (0, 0, 255), cv2.FILLED)
+            cv2.rectangle(self.frame, (left, bottom), (right, bottom+35), (0, 0, 255), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom +29), font, 1.0, (255, 255, 255), 1)
+            cv2.putText(self.frame, name, (left + 6, bottom +29), font, 1.0, (255, 255, 255), 1)
             print(name)
 
-        # Display the resulting image
-        cv2.imshow('Video', frame)
+        # Display the resulting image (THIS IS OPTIONAL AND BETTER USED FOR DEMO PURPOSES)
+        cv2.imshow('Video', self.frame)
 
-        return self.matches, frame
+        return self.matches, self.frame
+    
+    def write_images(self,im_name):
+        cv2.imwrite(f'captures/{im_name}',self.frame)
     
 
 
@@ -146,16 +152,54 @@ if __name__== '__main__':
     vid = Video()
 
     vid.load_faces()
+    delta = 0
+    previous_time = 0
 
+    # TEST first camera opening loop
     while True:
+        current_time = time.time()
+        delta += current_time - previous_time
+        previous_time = current_time 
 
         vid.check_faces()
 
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            # cv2.destroyAllWindows()
+            # cv2.destroyWindow("Video")
             break
 
+        # save picture if delta greater than 1 second
+        # print(delta)
+        if delta >=3:
+            print('first loop taking photo')
+            # im_name = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}_.png'
+            # vid.write_images(im_name)
+            # time.sleep(3)
+            # data_L.send_files(im_name)
+            delta = 0
+            # break
 
+    # test second camera opening loop (scenario with disarming and re-arming trip)
+    while True:
+        current_time = time.time()
+        delta += current_time - previous_time
+        previous_time = current_time 
+
+        vid.check_faces()
+        if delta >=3:
+            print('second loop taking photo')
+            im_name = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}_.png'
+            vid.write_images(im_name)
+            
+        #     # data_L.send_files(im_name)
+            delta = 0
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            # cv2.destroyAllWindows()
+            # cv2.destroyWindow("Video")
+            break
+        
     # # Grab a single frame of video
     # ret, frame = video_capture.read()
 
