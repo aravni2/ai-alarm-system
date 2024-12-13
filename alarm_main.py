@@ -7,7 +7,8 @@ import LCD1602  #LCD Screen
 import time
 from datetime import datetime
 from keypad import Keypad
-
+from az_data_lake_class import data_lake
+from az_key_vault import get_kv_secret  #used to securely retrieve secrets
 from Alarm_class import Alarm
 from facial_rec_class import Video
 
@@ -101,11 +102,20 @@ if __name__ == '__main__':
     # initiate pygame for channels/mixer
     pygame.init()
 
+    # Initialize relevant classes
     alarm = Alarm()
     kp = Keypad()
     vid = Video()
     vid.load_faces()
+
+    # set up azure cloud data lake storage for captured images
+    adl_account = get_kv_secret('adl-alarm-name')
+    data_L = data_lake(adl_account=adl_account,lcl_file_path = 'captures')
+
+    # add sentinal variable for motion detection/alarm siren trip
     motion = 0
+
+    # add time delta to keep track of when to take pictures delta starts off large so once alarm is triggered it auto takes pic
     delta = 0
     previous_time = 0
 
@@ -156,6 +166,7 @@ if __name__ == '__main__':
                     print('first loop taking photo')
                     im_name = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}_.png'
                     vid.write_images(im_name)
+                    data_L.send_files(im_name)
                     delta = 0
 
             # write statuses to LCD screen, spaces in strings ensure all characters are overwritten
