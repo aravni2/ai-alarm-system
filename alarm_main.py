@@ -4,6 +4,8 @@ import time
 import dht11  #Temp sensor
 import cv2
 import LCD1602  #LCD Screen
+import time
+from datetime import datetime
 from keypad import Keypad
 
 from Alarm_class import Alarm
@@ -104,10 +106,16 @@ if __name__ == '__main__':
     vid = Video()
     vid.load_faces()
     motion = 0
+    delta = 0
+    previous_time = 0
 
     try:
         time.sleep(.2)
         while True:
+
+            current_time = time.time()
+            delta += current_time - previous_time
+            previous_time = current_time 
 
             # check temperatures for fire outside of arm/disarm cycle
             temp,hum =report_temp()
@@ -135,12 +143,20 @@ if __name__ == '__main__':
                 matches, frame = vid.check_faces()
                 LCD1602.write(0,0,f'INTRUDER ALERT!!')
 
+
+
+
                 if matches:
                     alarm.disarm()
                     kp.status = ''
                     motion=0
                     # vid.video_capture.release()
                     # cv2.destroyAllWindows()
+                elif delta>=3:
+                    print('first loop taking photo')
+                    im_name = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}_.png'
+                    vid.write_images(im_name)
+                    delta = 0
 
             # write statuses to LCD screen, spaces in strings ensure all characters are overwritten
             elif alarm.is_armed:
