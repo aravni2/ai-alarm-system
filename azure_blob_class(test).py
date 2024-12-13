@@ -1,41 +1,13 @@
 from azure.identity import DefaultAzureCredential
-from azure.storage.filedatalake import DataLakeServiceClient
-from az_key_vault import get_kv_secret
-from datetime import datetime
 from azure.storage.blob import BlobServiceClient
+from azure.storage.filedatalake import DataLakeServiceClient
 import os
-# # Replace with your storage account name
-# storage_account_name = get_kv_secret('adl-alarm-name')
 
-# # Create a credential object
-# credential = DefaultAzureCredential()
-
-# # Create a DataLakeServiceClient object
-# service_client = DataLakeServiceClient(account_url=f"https://{storage_account_name}.dfs.core.windows.net", credential=credential)
-
-# # Replace with your file system (container) name
-# file_system_name = "captures"
-
-# # Replace with your file path
-# local_file_path = "test_file.jpg"
-# remote_file_path = "incident_1_.jpg"
-
-# # Create a FileSystemClient
-# file_system_client = service_client.get_file_system_client(file_system=file_system_name)
-
-# # Upload the file
-# with open(local_file_path, "rb") as data:
-#     file_client = file_system_client.get_file_client(remote_file_path)
-#     file_client.upload_data(data, overwrite=True)
-
-# print(f"File {local_file_path} uploaded to {file_system_name} as {remote_file_path}")
-
-class data_lake:
-    def __init__(self,adl_account = 'adlalarm', lcl_file_path = 'captures'):
+class az_blobs:
+    def __init__(self,adl_account = 'adlalarmdata', lcl_file_path = 'captures'):
         self.storage_account_name = adl_account
         self.local_file_path = lcl_file_path
         self.adl_container_name = 'captures'
-
 
         # Create a credential object
         self.credential = DefaultAzureCredential()
@@ -98,16 +70,16 @@ class data_lake:
                 folder = dirpath.split('\\')[-1]
                 # print(folder,filename)
                 with open(f'known_faces/{folder}/{filename}', mode="rb") as fh:
-                    blob_client = self.container_client.upload_blob(name=f'knownFaces/{folder}/{filename}', data=fh, overwrite=True)
-    def pull_push_known_faces(self):
-        self.download_known_faces()
-        self.upload_known_faces()
-    
+                    blob_client = self.container_client.upload_blob(name=f'{folder}/{filename}', data=fh, overwrite=True)
+                    
+                
 
 
 
-if __name__ =='__main__':
-    adl_account = get_kv_secret('adl-alarm-name')
-    dl = data_lake(adl_account=adl_account,lcl_file_path = 'captures')
-    dl.pull_push_known_faces()
-    dl.send_files('test_file.jpg')
+if __name__ == '__main__':
+    blob = az_blobs()
+
+    blob.upload_known_faces()
+
+    blob.send_files('20241210-000623_.png')
+
