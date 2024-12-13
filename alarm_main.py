@@ -126,8 +126,8 @@ if __name__ == '__main__':
                 alarm.disarm()
                 kp.status = ''
                 motion = 0
-                vid.video_capture.release()
-                cv2.destroyAllWindows()
+                # vid.video_capture.release()
+                # cv2.destroyAllWindows()
             # Armed State checks
             motion = max(motion, detect_motion())
             if alarm.is_armed ==1  and motion==1:
@@ -139,8 +139,8 @@ if __name__ == '__main__':
                     alarm.disarm()
                     kp.status = ''
                     motion=0
-                    vid.video_capture.release()
-                    cv2.destroyAllWindows()
+                    # vid.video_capture.release()
+                    # cv2.destroyAllWindows()
 
             # write statuses to LCD screen, spaces in strings ensure all characters are overwritten
             elif alarm.is_armed:

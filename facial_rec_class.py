@@ -95,7 +95,7 @@ class Video():
             print(name)
 
         # Display the resulting image
-        cv2.imshow('Video', frame)
+        # cv2.imshow('Video', frame)
 
         return self.matches, frame
     
