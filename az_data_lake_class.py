@@ -75,7 +75,8 @@ class data_lake:
                 blob_name = blob_path[2]
                 blob_client = self.container_client.get_blob_client(blob.name)
                 
-                print(f"Name: {blob.name}", blob_path, blob_folder,blob_name)
+                print('download blob floder:',blob_folder)
+                # print(f"Name: {blob.name}", blob_path, blob_folder,blob_name)
 
                 # create local folder if it doesn't exist
                 if not os.path.exists( 'known_faces/' + blob_folder):
@@ -85,18 +86,21 @@ class data_lake:
                 with open(f'known_faces/{blob_folder}/{blob_name}', mode="wb") as sample_blob:
                     download_stream = blob_client.download_blob()
                     sample_blob.write(download_stream.readall())
+                    print('downloaded to:', f'known_faces/{blob_folder}/{blob_name}')
         
         # print(f"File {self.local_file_path} uploaded to {self.adl_container_name} as {file_name}")
     
     def upload_known_faces(self):
         for dirpath, dirnames, filenames in os.walk('known_faces'):
+            
             # print(f"Directory: {dirpath}")
             # for dirname in dirnames:
             #     print(f"Subfolder: {os.path.join(dirpath, dirname)}")
             for filename in filenames:
-                print(f"{os.path.join(dirpath, filename)}")
-                folder = dirpath.split('\\')[-1]
-                # print(folder,filename)
+                print(f"first - {os.path.join(dirpath, filename)}")
+                # folder = dirpath.split('\\')[-1]   #windows version  MUST CHANGE WHEN USING DEMO
+                folder = dirpath.split('/')[-1]  #linux version
+                print(folder,filename)
                 with open(f'known_faces/{folder}/{filename}', mode="rb") as fh:
                     blob_client = self.container_client.upload_blob(name=f'knownFaces/{folder}/{filename}', data=fh, overwrite=True)
     def pull_push_known_faces(self):

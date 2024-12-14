@@ -104,7 +104,7 @@ if __name__ == '__main__':
     data_L = data_lake(adl_account=adl_account,lcl_file_path = 'captures')
 
     # sync known faces with cloud account
-    dl.pull_push_known_faces()
+    data_L.pull_push_known_faces()
 
     # initiate pygame for channels/mixer
     pygame.init()
@@ -146,12 +146,14 @@ if __name__ == '__main__':
                 alarm.arm()
                 motion = 0
                 kp.status = ''
+                vid.initiate_capture()
             elif kp.status == 'DISARMING':
                 alarm.disarm()
                 kp.status = ''
                 motion = 0
-                # vid.video_capture.release()
-                # cv2.destroyAllWindows()
+                vid.video_capture.release()
+                cv2.destroyAllWindows()
+                vid.clean_up_capture()
             # Armed State checks
             motion = max(motion, detect_motion())
             if alarm.is_armed ==1  and motion==1:
@@ -165,11 +167,17 @@ if __name__ == '__main__':
                 if matches:
                     alarm.disarm()
                     kp.status = ''
+                    
                     motion=0
-                    # vid.video_capture.release()
-                    # cv2.destroyAllWindows()
+                    
+                    # clean out video capture and remove any windows that could be storing older frames
+                    vid.video_capture.release()
+                    cv2.destroyAllWindows()
+                    vid.clean_up_capture()
+
+                # start taking pictures every 3 seconds 
                 elif delta>=3:
-                    print('first loop taking photo')
+                    print('taking photo')
                     im_name = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}_.png'
                     vid.write_images(im_name)
                     data_L.send_files(im_name)
@@ -190,6 +198,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         time.sleep(.2)
         LCD1602.clear()
+        time.sleep(.2)
         GPIO.cleanup()
         print('GPIO cleaned up')
 

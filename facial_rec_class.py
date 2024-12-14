@@ -24,8 +24,9 @@ class Video():
         self.face_names = []
         self.matches = []
         self.frame = None
+        self.video_capture = []
 
-        self.video_capture = cv2.VideoCapture(0)
+        # self.video_capture = cv2.VideoCapture(0)
 
     def load_faces(self):
         """Load faces from "known_faces" folder
@@ -98,12 +99,22 @@ class Video():
             print(name)
 
         # Display the resulting image
-        # cv2.imshow('Video', frame)
+        # cv2.imshow('Video', self.frame)
 
         return self.matches, self.frame
     
     def write_images(self,im_name):
         cv2.imwrite(f'captures/{im_name}',self.frame)
+
+    def initiate_capture(self):
+        self.video_capture = cv2.VideoCapture(0)
+
+    def clean_up_capture(self):
+        self.frame = None
+        self.matches = False
+        self.process_this_frame = True
+    #     self.video_capture.release()
+
     
 
 
