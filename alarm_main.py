@@ -99,6 +99,13 @@ def detect_motion():
 
 
 if __name__ == '__main__':
+    # set up azure cloud data lake storage for captured images
+    adl_account = get_kv_secret('adl-alarm-name')
+    data_L = data_lake(adl_account=adl_account,lcl_file_path = 'captures')
+
+    # sync known faces with cloud account
+    dl.pull_push_known_faces()
+
     # initiate pygame for channels/mixer
     pygame.init()
 
@@ -108,9 +115,8 @@ if __name__ == '__main__':
     vid = Video()
     vid.load_faces()
 
-    # set up azure cloud data lake storage for captured images
-    adl_account = get_kv_secret('adl-alarm-name')
-    data_L = data_lake(adl_account=adl_account,lcl_file_path = 'captures')
+
+
 
     # add sentinal variable for motion detection/alarm siren trip
     motion = 0
