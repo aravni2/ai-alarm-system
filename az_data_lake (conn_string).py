@@ -1,5 +1,7 @@
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 # ////////CONNECTION STRING VERSION///////////////////
+
+
 # Replace with your connection string
 connection_string = "your_connection_string"
 

@@ -1,7 +1,10 @@
 import RPi.GPIO as GPIO
 import time
-
-# TODO: read into motion detector. delay changes and jumper switches on 
+# Ghosananda Wijaya and Anthony Ravnic 
+# CS437
+# 2024.10.12
+#
+# Description:
 # potentiometer on the right controls the senstitivity , and the potentiometer on the left controls the timeout. 
 # counter clockwise is lowest setting for both
 #  timeout - fully anticlockwise timesout for 2.5 seconds, fully clockwise times out for 250seconds. best to leave this low while 

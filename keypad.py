@@ -16,8 +16,6 @@
     # and assigning a locked value so the next loop (if still pressed) would not send value
 
 
-#   dht11 Temperature sensor with LCD1602 module are used to collect temperature and humidity settings and send them to 
-#   the LCD display. This will later be used to detect fire/flood
 
 
 import RPi.GPIO as GPIO

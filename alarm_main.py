@@ -11,7 +11,26 @@ from az_data_lake_class import data_lake
 from az_key_vault import get_kv_secret  #used to securely retrieve secrets
 from Alarm_class import Alarm
 from facial_rec_class import Video
-
+# Ghosananda Wijaya and Anthony Ravnic 
+# CS437
+# 2024.10.12
+#
+# Description:
+    # This is the main alarm function that incorporates all the modules into a loop. the main loop:
+    # 1. initializes all the modules and sensors, including a pull push of known faces to the cloud 
+    # 2. checks for fire first and foremost, but remains unarmed
+    # 3. temperature and humidity are reported via the keypad along with alarm status
+    # 4. arming the system via keypad ("1234" + "A") then triggers a soft alarm (to leave house). 
+    # 5. Once armed a series of triggers check for motion and initializes the camera (though not recording) when in armed state
+    # 6. if motion is detected, the Alarm() class triggers the siren and a soft alarm starts (5 seconds for demo speed) followed by a hard alarm siren 
+    # 7. once soft alarm is triggered the camera starts taking pictures on an interval (default 3 seconds) starting with one picture taken immediately.
+    # 8. pictures are then uploaded into the cloud and stored for user to check in browser or app
+    # 9. it also checks every other frame (for processing speed up) to see if a person in frame matches to the "known faces" 
+    #       if so, system is disarmed and camera is turned off. if not, the siren continues to play and pictures are uploaded to cloud
+    # 10. disarming can also be done via the keypad as well, but simply typing in 1234 +"D"
+    #ADDITIONAL FEATURES:
+    # the system also allows for changing password by typing 1234 + "C" then "<newpass>"+"C"
+    #and additional buzzer was set up to sound off whenever motion was detected, this is an active buzzer and is not tonally changed
 
 
 GPIO.setmode(GPIO.BOARD)
@@ -69,6 +88,10 @@ GPIO.setup(c3_in_pin,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
 
 
 def report_temp():
+    """Helper fucntion to report temperature/humidity to LCD screen
+
+    
+    """
     TH_result = temp_sensor.read()
     if TH_result.is_valid():
         temp_cels = TH_result.temperature
@@ -83,6 +106,7 @@ def report_temp():
         return -1,-1
     
 def detect_motion():
+    """helper function to detect motion and return it to a sentinal variable in loop"""
     motion = GPIO.input(pir_pin)
     
 
@@ -121,7 +145,7 @@ if __name__ == '__main__':
     # add sentinal variable for motion detection/alarm siren trip
     motion = 0
 
-    # add time delta to keep track of when to take pictures delta starts off large so once alarm is triggered it auto takes pic
+    # add time delta to keep track of when to take pictures. Delta starts off large so once alarm is triggered it auto takes pic
     delta = 0
     previous_time = 0
 
@@ -163,7 +187,7 @@ if __name__ == '__main__':
 
 
 
-
+                # face matches to known faces (disarm and clear variables)
                 if matches:
                     alarm.disarm()
                     kp.status = ''
@@ -175,7 +199,7 @@ if __name__ == '__main__':
                     cv2.destroyAllWindows()
                     vid.clean_up_capture()
 
-                # start taking pictures every 3 seconds 
+                # start taking and sending pictures to cloud every 3 seconds 
                 elif delta>=3:
                     print('taking photo')
                     im_name = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}_.png'
