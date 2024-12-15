@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
     # sync known faces with cloud account
     data_L.pull_push_known_faces()
-
+    
     # initiate pygame for channels/mixer
     pygame.init()
 
