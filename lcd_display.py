@@ -1,5 +1,12 @@
 import LCD1602
 import time
+# Ghosananda Wijaya and Anthony Ravnic 
+# CS437
+# 2024.10.12
+#
+# Description:
+    # SEE LCD1602.py module This File utilizes an LCD1602 library we found on the "TopTechBoy" youtube channel. it appears he received this library from someone else, but
+    # this is only a test of the system
 
 LCD1602.init(0x27,1)
 

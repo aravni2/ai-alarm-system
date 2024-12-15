@@ -2,23 +2,16 @@
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
-# # Replace with your Key Vault URL
-# key_vault_url = "https://kv-alarm-codes.vault.azure.net//"
+# Ghosananda Wijaya and Anthony Ravnic 
+# CS437
+# 2024.10.12
+#
+# Description:
+    # OPTIONAL IF CLOUD STORAGE IS SET UP
+    # 
+    # This is a simple function to retrieve keyvault secrets from azure key vault. One must first authenticate with azure via MFA, then they can use this module
+    # to retrieve both the storage account name, and secret (this obscures both name and key, allowing for an additional layer of safety)
 
-# # Create a credential object
-# credential = DefaultAzureCredential()
-
-# # Create a SecretClient object
-# secret_client = SecretClient(vault_url=key_vault_url, credential=credential)
-
-# # Replace with your secret name
-# secret_name = "adl-alarm-secret"
-
-# # Retrieve the secret
-# retrieved_secret = secret_client.get_secret(secret_name)
-
-# # Print the secret value
-# print(f"Secret Value: {retrieved_secret.value}")
 
 def get_kv_secret(kv_name):
     key_vault_url = "https://kv-alarm-codes.vault.azure.net/"

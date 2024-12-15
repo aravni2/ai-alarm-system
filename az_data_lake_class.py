@@ -4,31 +4,13 @@ from az_key_vault import get_kv_secret
 from datetime import datetime
 from azure.storage.blob import BlobServiceClient
 import os
-# # Replace with your storage account name
-# storage_account_name = get_kv_secret('adl-alarm-name')
-
-# # Create a credential object
-# credential = DefaultAzureCredential()
-
-# # Create a DataLakeServiceClient object
-# service_client = DataLakeServiceClient(account_url=f"https://{storage_account_name}.dfs.core.windows.net", credential=credential)
-
-# # Replace with your file system (container) name
-# file_system_name = "captures"
-
-# # Replace with your file path
-# local_file_path = "test_file.jpg"
-# remote_file_path = "incident_1_.jpg"
-
-# # Create a FileSystemClient
-# file_system_client = service_client.get_file_system_client(file_system=file_system_name)
-
-# # Upload the file
-# with open(local_file_path, "rb") as data:
-#     file_client = file_system_client.get_file_client(remote_file_path)
-#     file_client.upload_data(data, overwrite=True)
-
-# print(f"File {local_file_path} uploaded to {file_system_name} as {remote_file_path}")
+# Ghosananda Wijaya and Anthony Ravnic 
+# CS437
+# 2024.10.12
+#
+# Description:
+    # This Class deals with using authetication through azure to upload and download known faces, a pull/push process to make sure local known faces are synced
+    # with the cloud. it also has some functions that allow it to send captured images (when alarm goes off) to the cloud
 
 class data_lake:
     def __init__(self,adl_account = 'adlalarm', lcl_file_path = 'captures'):

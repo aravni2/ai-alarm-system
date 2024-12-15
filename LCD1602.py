@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
-
+# Ghosananda Wijaya and Anthony Ravnic 
+# CS437
+# 2024.10.12
+#
+# Description:
+    # This is the LCD library we found on the Top Tech Boy youtube channel. it assists with basic writes, and clears based on what row you want to write too
+    #  these basic functions are then used to write and display on the LCD screen. 
+    #  the LCD screen is a 16 column by 2 row LCD display and giving the row,column to the write commands tells the LCD to start printing at that exact spot
 import time
 import smbus2 as smbus
+
+
+
 
 BUS = smbus.SMBus(1)
 

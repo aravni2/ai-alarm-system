@@ -6,7 +6,14 @@ import numpy as np
 import time
 from datetime import datetime
 # https://www.youtube.com/watch?v=535acCxjHCI
-
+# Ghosananda Wijaya and Anthony Ravnic 
+# CS437
+# 2024.10.12
+#
+# Description:
+    # This file creates a CV2 and facial recognition class that essentially initiates the camera, takes pictures (frames) then processes those frames against
+    # the known_faces, this processing then comes back as either a match = True or Match = False based on tolerance and other factors
+    #if match equals true, it will display the name in a bounding box around the persons face. currently it can match against multiple peoples faces
 
 class Video():
     def __init__(self) -> None:
